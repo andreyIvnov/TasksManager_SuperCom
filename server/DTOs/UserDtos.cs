@@ -32,5 +32,17 @@ namespace server.DTOs
             public string Telephone { get; set; }
             public string Email { get; set; }
         }
+
+        public class UserAddTasksDto
+        {
+            [Required]
+            public List<int> TaskIds { get; set; } = new List<int>();
+        }
+
+        public class UserDeleteTasksDto
+        {
+            [Required]
+            public List<int> TaskIds { get; set; } = new List<int>();
+        }
     }
 }

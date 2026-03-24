@@ -23,5 +23,18 @@ namespace server.DTOs
             public int Id { get; set; }
             public string Name { get; set; }
         }
+
+        public class TagAddTasksDto
+        {
+            [Required]
+            public List<int> TaskIds { get; set; } = new List<int>();
+        }
+
+        public class TagDeleteTasksDto
+        {
+            [Required]
+            public List<int> TaskIds { get; set; } = new List<int>();
+        }
+
     }
 }

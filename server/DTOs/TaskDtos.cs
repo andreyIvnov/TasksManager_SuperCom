@@ -34,7 +34,7 @@ namespace server.DTOs
             public List<int> TagIds { get; set; }
         }
 
-        public class TaskRemoveTasks
+        public class TaskDeleteTags
         {
             [Required]
             public List<int> TagIds { get; set; }
