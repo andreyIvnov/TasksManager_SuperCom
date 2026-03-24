@@ -15,6 +15,6 @@ namespace server.Models
         public int UserId { get; set; }
         public User User { get; set; }
         public bool IsReminderSent { get; set; }
-        public ICollection<Tag> Tags { get; set; }
+        public ICollection<Tag> Tags { get; set; } = new List<Tag>();
     }
 }
