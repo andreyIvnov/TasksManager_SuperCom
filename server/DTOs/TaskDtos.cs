@@ -28,6 +28,18 @@ namespace server.DTOs
             public List<int>? TagIds { get; set; }
         }
 
+        public class TaskAddTagsDto
+        {
+            [Required]
+            public List<int> TagIds { get; set; }
+        }
+
+        public class TaskRemoveTasks
+        {
+            [Required]
+            public List<int> TagIds { get; set; }
+        }
+
         public class TaskMaxDataToShowDto
         {
             public int Id { get; set; }
