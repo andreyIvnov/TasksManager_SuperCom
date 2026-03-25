@@ -1,5 +1,6 @@
 ﻿using server.Models;
 using System.ComponentModel.DataAnnotations;
+using static server.DTOs.TaskDtos;
 
 namespace server.DTOs
 {
@@ -18,12 +19,6 @@ namespace server.DTOs
             public List<int>? Tasks { get; set; } = new List<int>();
         }
 
-        public class TagMinDataDto
-        {
-            public int Id { get; set; }
-            public string Name { get; set; }
-        }
-
         public class TagAddTasksDto
         {
             [Required]
@@ -36,5 +31,17 @@ namespace server.DTOs
             public List<int> TaskIds { get; set; } = new List<int>();
         }
 
+        public class TagMinDataDto
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+        }
+
+        public class TagMaxDataDto
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public List<TaskMinDataDto>? Tasks { get; set; }
+        }
     }
 }

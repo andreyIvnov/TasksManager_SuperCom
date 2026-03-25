@@ -11,7 +11,7 @@ namespace server.Interfaces
         public CustomResponse<TaskMaxDataToShowDto> Create([FromBody] TaskCreateDto newTaskData);
         public CustomResponse<string> Update(int taskId, [FromBody] TaskUpdateDto dataToUpd);
         public CustomResponse<string> Delete(int taskId);
-        public CustomResponse<string> AddTagsToTask(int taskId, [FromBody] TaskAddTagsDto tagsToAdd);
-        public CustomResponse<string> DeleteTagsFromTask(int taskId, [FromBody] TaskDeleteTags tagsToDelete);
+        public CustomResponse<string> AssociateTagsToTask(int taskId, [FromBody] TaskAddTagsDto tagsToAssociate);
+        public CustomResponse<string> DisassociateTagsFromTask(int taskId, [FromBody] TaskDeleteTags tagsToDisassociate);
     }
 }

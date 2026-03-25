@@ -1,5 +1,6 @@
 ﻿using server.Models;
 using System.ComponentModel.DataAnnotations;
+using static server.DTOs.TaskDtos;
 
 namespace server.DTOs
 {
@@ -8,9 +9,9 @@ namespace server.DTOs
         public class UserCreateDto
         {
             [Required]
-            public string FullName { get; set; }
+            public string? FullName { get; set; }
             [Required]
-            public string Telephone { get; set; }
+            public string? Telephone { get; set; }
             [EmailAddress]
             public string? Email { get; set; }
             public List<int>? TaskIds { get; set; } = new List<int>();
@@ -25,14 +26,6 @@ namespace server.DTOs
             public List<int>? TaskIds { get; set; } = new List<int>();
         }
 
-        public class UserMinDataDto
-        {
-            public int Id { get; set; }
-            public string FullName { get; set; }
-            public string Telephone { get; set; }
-            public string Email { get; set; }
-        }
-
         public class UserAddTasksDto
         {
             [Required]
@@ -44,5 +37,21 @@ namespace server.DTOs
             [Required]
             public List<int> TaskIds { get; set; } = new List<int>();
         }
+        public class UserMinDataDto
+        {
+            public int Id { get; set; }
+            public string FullName { get; set; }
+            public string Telephone { get; set; }
+            public string? Email { get; set; }
+        }
+        public class UserMaxDataDto
+        {
+            public int Id { get; set; }
+            public string FullName { get; set; }
+            public string Telephone { get; set; }
+            public string? Email { get; set; }
+            public List<TaskMinDataDto>? Tasks { get; set; }
+        }
+
     }
 }

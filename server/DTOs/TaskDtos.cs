@@ -9,12 +9,17 @@ namespace server.DTOs
     {
         public class TaskCreateDto
         {
-            public string Title { get; set; }
+            [Required]
+            public string? Title { get; set; }
             public string? Description { get; set; }
-            public DateTime DueDate { get; set; }
-            public int Priority { get; set; }
+            [Required]
+            public DateTime? DueDate { get; set; }
+            [Required]
+            [Range(1,3)]
+            public int? Priority { get; set; }
             public int? UserId { get; set; }
-            public bool IsReminderSent { get; set; }
+            public bool? IsReminderSent { get; set; }
+            public List<int>? TagIds { get; set; }
         }
 
         public class TaskUpdateDto
@@ -22,6 +27,7 @@ namespace server.DTOs
             public string? Title { get; set; }
             public string? Description { get; set; }
             public DateTime? DueDate { get; set; }
+            [Range(1, 3)]
             public int? Priority { get; set; }
             public int? UserId { get; set; }
             public bool? IsReminderSent { get; set; }
@@ -47,9 +53,17 @@ namespace server.DTOs
             public string? Description { get; set; }
             public DateTime DueDate { get; set; }
             public int Priority { get; set; }
-            public bool IsReminderSent { get; set; }
+            public bool? IsReminderSent { get; set; }
             public UserMinDataDto? User { get; set; }
             public List<TagMinDataDto>? Tags { get; set; } = new List<TagMinDataDto>();
         }
+
+        public class TaskMinDataDto
+        {
+            public int Id { get; set; }
+            public string Title { get; set; }
+            public int Priority { get; set; }
+            public DateTime DueDate { get; set; }
+        }   
     }
 }

@@ -10,7 +10,7 @@ namespace server.Models
         [Required]
         public string Telephone { get; set; }
         [EmailAddress]
-        public string Email { get; set; }
+        public string? Email { get; set; }
         public ICollection<TaskItem> Tasks { get; set; } = new List<TaskItem>();
     }
 }
