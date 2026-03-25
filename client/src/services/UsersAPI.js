@@ -1,0 +1,10 @@
+import axios from 'axios';
+const USERS_ENDPOINT = 'http://localhost:3000/api/users';
+const getUsers = () => axios.get(USERS_ENDPOINT);
+const getUserById = (id) => axios.get(`${USERS_ENDPOINT}/${id}`);
+const createUser = (userData) => axios.post(USERS_ENDPOINT, userData);
+const updateUser = (id, userData) => axios.put(`${USERS_ENDPOINT}/${id}`, userData);
+const deleteUser = (id) => axios.delete(`${USERS_ENDPOINT}/${id}`);
+const associateTasksToUser = (userId, tasksList) => axios.put(`${USERS_ENDPOINT}/associatetasks/${userId}`, { taskIds: tasksList });
+const disassociateTasksFromUser = (userId, tasksList) => axios.put(`${USERS_ENDPOINT}/disassociatetasks/${userId}`, { taskIds: tasksList });
+export { getUsers, getUserById, createUser, updateUser, deleteUser, associateTasksToUser, disassociateTasksFromUser };

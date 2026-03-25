@@ -1,0 +1,10 @@
+import axios from 'axios';
+const TASKS_ENDPOINT = 'http://localhost:3000/api/tasks';
+const getTasks = () => axios.get(TASKS_ENDPOINT);
+const getTaskById = (id) => axios.get(`${TASKS_ENDPOINT}/${id}`);
+const createTask = (taskData) => axios.post(TASKS_ENDPOINT, taskData);
+const updateTask = (id, taskData) => axios.put(`${TASKS_ENDPOINT}/${id}`, taskData);
+const deleteTask = (id) => axios.delete(`${TASKS_ENDPOINT}/${id}`);
+const associateTagsToTask = (taskId, tagsList) => axios.put(`${TASKS_ENDPOINT}/associatetags/${taskId}`, { tagIds: tagsList });
+const disassociateTagsFromTask = (taskId, tagsList) => axios.put(`${TASKS_ENDPOINT}/disassociatetags/${taskId}`, { tagIds: tagsList });
+export { getTasks, getTaskById, createTask, updateTask, deleteTask, associateTagsToTask, disassociateTagsFromTask };
