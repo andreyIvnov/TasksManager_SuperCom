@@ -1,0 +1,70 @@
+.crm-lookup {
+  position: relative;
+  width: 280px;
+  font-family: Segoe UI, Arial, sans-serif;
+}
+
+/* Input */
+.crm-input {
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid #c8c6c4;
+  border-radius: 2px;
+  font-size: 14px;
+}
+
+.crm-input:focus {
+  outline: none;
+  border-color: #0078d4;
+}
+
+/* Selected chip */
+.crm-selected {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border: 1px solid #c8c6c4;
+  border-radius: 2px;
+  background: #f3f2f1;
+}
+
+.crm-selected a {
+  color: #0078d4;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.crm-clear {
+  cursor: pointer;
+  font-size: 16px;
+  color: #666;
+}
+
+/* Dropdown */
+.crm-dropdown {
+  position: absolute;
+  top: 105%;
+  width: 100%;
+  background: rgb(0, 0, 0);
+  border: 1px solid #c8c6c4;
+  box-shadow: 0 4px 8px rgba(0,0,0,.15);
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.crm-option {
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.crm-option:hover {
+  background: #a39d92;
+}
+
+.crm-empty {
+  padding: 8px;
+  color: #666;
+  font-size: 13px;
+}

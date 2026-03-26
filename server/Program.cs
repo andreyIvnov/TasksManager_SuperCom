@@ -10,6 +10,8 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
+app.UseCors("All");
+
 app.UseMiddleware<ExceptionsMiddleware>();
 
 app.MapControllers();

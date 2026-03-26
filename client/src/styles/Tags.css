@@ -1,0 +1,62 @@
+/* Tags Component - Black Pink Blue Theme */
+
+.tags-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    background: var(--surface-elevated);
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-primary);
+}
+
+.tags-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-sm);
+    max-width: 100%;
+}
+
+/* Responsive grid for different screen sizes */
+@media (min-width: 768px) {
+    .tags-list {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+}
+
+@media (min-width: 1200px) {
+    .tags-list {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.tags-title {
+    color: var(--text-secondary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    margin-bottom: var(--spacing-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tags-empty {
+    color: var(--text-muted);
+    font-style: italic;
+    font-size: var(--font-size-xs);
+    padding: var(--spacing-sm);
+    text-align: center;
+    border: 1px dashed var(--border-secondary);
+    border-radius: var(--radius-sm);
+    background: var(--surface-card);
+}
+
+.add-tag-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: var(--spacing-lg);
+    width: 100%;
+}

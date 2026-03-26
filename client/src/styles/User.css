@@ -1,0 +1,108 @@
+/* User Component - Black Pink Blue Theme */
+
+.user-inline {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    text-align: left;
+    line-height: 1.3;
+}
+
+.user-inline-name {
+    color: var(--text-primary);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-sm);
+}
+
+.user-inline-phone {
+    color: var(--text-secondary);
+    font-size: var(--font-size-xs);
+    font-family: 'Courier New', monospace;
+}
+
+.user-inline-email {
+    color: var(--text-secondary);
+    font-size: var(--font-size-xs);
+    font-family: 'Courier New', monospace;
+    word-break: break-word;
+}
+
+.user-cell {
+    padding: var(--spacing-md);
+    text-align: center;
+    border-bottom: 1px solid rgba(224, 224, 224, 0.3);
+    color: var(--text-primary);
+    font-size: var(--font-size-sm);
+    vertical-align: middle;
+    transition: var(--transition-fast);
+}
+
+.user-name {
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+    text-align: left;
+}
+
+.user-email {
+    font-family: 'Courier New', monospace;
+    color: var(--text-secondary);
+    font-size: var(--font-size-xs);
+}
+
+.user-phone {
+    color: var(--text-secondary);
+    font-family: 'Courier New', monospace;
+}
+
+.user-actions {
+    white-space: nowrap;
+    text-align: center;
+}
+
+.user-delete-btn {
+    background: var(--error);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+    transition: var(--transition-fast);
+    margin: 0 var(--spacing-xs);
+    min-width: 35px;
+    height: 35px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+}
+
+.user-delete-btn:hover {
+    background: #c62828;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.user-delete-btn:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
+}
+
+.user-delete-btn:focus {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .user-cell {
+        padding: var(--spacing-sm);
+        font-size: var(--font-size-xs);
+    }
+    
+    .user-delete-btn {
+        min-width: 30px;
+        height: 30px;
+        padding: var(--spacing-xs);
+    }
+}
