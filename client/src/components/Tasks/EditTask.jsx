@@ -81,7 +81,7 @@ function EditTask() {
 
     return (
         <>
-            <div>EditTask</div>
+            <div>Task Editor</div>
             <div style={{ textAlign: 'left', padding: '10px 10px 10px 10px' }}>
                 <strong>Title: </strong>        <input onChange={handleChanges} type="text" name="title" defaultValue={state.taskToEdit.title} /><br />
                 <strong>Description: </strong><br /> 

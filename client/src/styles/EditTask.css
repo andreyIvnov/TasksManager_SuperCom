@@ -235,7 +235,7 @@
 }
 
 .edit-task-save-btn {
-    background: linear-gradient(45deg, var(--success), #388E3C);
+    background: linear-gradient(160deg, var(--primary-800), var(--secondary-800));
     color: var(--text-primary);
     border: none;
     padding: var(--spacing-lg) var(--spacing-2xl);
@@ -253,7 +253,7 @@
 }
 
 .edit-task-save-btn:hover:not(:disabled) {
-    background: linear-gradient(45deg, #388E3C, #2E7D32);
+    background: linear-gradient(120deg, var(--primary-800), var(--secondary-800));
     transform: translateY(-3px);
     box-shadow: var(--shadow-xl);
 }
