@@ -1,12 +1,27 @@
 import { useEffect, useReducer } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import {
+  Box,
+  Typography,
+  TextField,
+  Stack,
+  Button,
+  Paper,
+  IconButton,
+  Breadcrumbs,
+  Link
+} from '@mui/material';
+import {
+  ArrowBack as ArrowBackIcon,
+  Save as SaveIcon,
+  NavigateNext as NavigateNextIcon
+} from '@mui/icons-material';
+
 import LookupField from "../LookupField";
 import TagSelector from "../Tags/TagSelector";
 import { updateTask } from "../../services/TasksAPI"
-
 import { INITITAL_STATE, taskEditReducer } from "../../utils/localReducersManager/taskEditReducer";
-import "../../styles/EditTask.css"
 
 function EditTask() {
     const [state, localDispatch] = useReducer(taskEditReducer, INITITAL_STATE);
@@ -80,38 +95,122 @@ function EditTask() {
 
 
     return (
-        <>
-            <div>Task Editor</div>
-            <div style={{ textAlign: 'left', padding: '10px 10px 10px 10px' }}>
-                <strong>Title: </strong>        <input onChange={handleChanges} type="text" name="title" defaultValue={state.taskToEdit.title} /><br />
-                <strong>Description: </strong><br /> 
-                <textarea onChange={handleChanges} name="description" defaultValue={state.taskToEdit.description} rows="4" placeholder="Enter task description..." style={{ width: '300px', padding: '5px', resize: 'vertical', fontFamily: 'inherit' }} /><br />
-                <strong>Due Date: </strong>     <input onChange={handleChanges} type="datetime-local" name="dueDate" defaultValue={formatDateTimeLocal(state.taskToEdit.dueDate)} /><br />
-                <strong>Priority: </strong>     <input onChange={handleChanges} type="number" min={1} max={3} name="priority" defaultValue={state.taskToEdit.priority} /><br />
-                <strong>User: </strong>
-                <LookupField 
-                    options={state.usersLookupOpts} 
-                    defaultValue={state.defaultUser}
-                    onChange={handleUserChange}
-                /><br />
-                <strong>Tags: </strong>
-                <TagSelector 
-                    selectedTags={state.selectedTags}
-                    onTagChange={handleTagChange}
-                    taskId={selectedTaskId}
-                    readOnly={false}
-                />
-                <div className="edit-task-actions">
-                    <button 
-                        className="edit-task-save-btn"
-                        onClick={saveTaskChanges}
+        <Box sx={{ height: '100%' }}>
+            {/* Header with breadcrumbs */}
+            <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 2 }}>
+                <IconButton 
+                    onClick={() => navigateTo('/tasks')}
+                    sx={{ bgcolor: 'grey.100' }}
+                >
+                    <ArrowBackIcon />
+                </IconButton>
+                <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />}>
+                    <Link 
+                        color="inherit" 
+                        sx={{ cursor: 'pointer' }}
+                        onClick={() => navigateTo('/tasks')}
                     >
-                        Save Changes
-                    </button>
-                </div>
-            </div>
-        </>
-    )
+                        Tasks
+                    </Link>
+                    <Typography color="text.primary" fontWeight={500}>
+                        Edit Task
+                    </Typography>
+                </Breadcrumbs>
+            </Box>
+
+            <Paper sx={{ p: 3, height: 'calc(100% - 100px)', overflow: 'auto' }}>
+                <Stack spacing={3}>
+                    <Typography variant="h5" component="h1" sx={{ mb: 2, fontWeight: 600 }}>
+                        Edit Task
+                    </Typography>
+                    
+                    <TextField
+                        name="title"
+                        label="Title"
+                        defaultValue={state.taskToEdit.title}
+                        onChange={handleChanges}
+                        fullWidth
+                        variant="outlined"
+                    />
+                    
+                    <TextField
+                        name="description"
+                        label="Description"
+                        defaultValue={state.taskToEdit.description}
+                        onChange={handleChanges}
+                        multiline
+                        rows={4}
+                        fullWidth
+                        variant="outlined"
+                    />
+                    
+                    <TextField
+                        name="dueDate"
+                        label="Due Date"
+                        type="datetime-local"
+                        defaultValue={formatDateTimeLocal(state.taskToEdit.dueDate)}
+                        onChange={handleChanges}
+                        fullWidth
+                        variant="outlined"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
+                    
+                    <TextField
+                        name="priority"
+                        label="Priority"
+                        type="number"
+                        inputProps={{ min: 1, max: 3 }}
+                        defaultValue={state.taskToEdit.priority}
+                        onChange={handleChanges}
+                        fullWidth
+                        variant="outlined"
+                        helperText="Priority level: 1 (High), 2 (Medium), 3 (Low)"
+                    />
+                    
+                    <Box>
+                        <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 500 }}>
+                            Assigned User
+                        </Typography>
+                        <LookupField 
+                            options={state.usersLookupOpts} 
+                            defaultValue={state.defaultUser}
+                            onChange={handleUserChange}
+                        />
+                    </Box>
+                    
+                    <Box>
+                        <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 500 }}>
+                            Tags
+                        </Typography>
+                        <TagSelector 
+                            selectedTags={state.selectedTags}
+                            onTagChange={handleTagChange}
+                            taskId={selectedTaskId}
+                            readOnly={false}
+                        />
+                    </Box>
+                    
+                    <Box sx={{ pt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                        <Button 
+                            onClick={saveTaskChanges}
+                            variant="contained"
+                            startIcon={<SaveIcon />}
+                            size="large"
+                            sx={{ 
+                                textTransform: 'none',
+                                fontWeight: 500,
+                                px: 4
+                            }}
+                        >
+                            Save Changes
+                        </Button>
+                    </Box>
+                </Stack>
+            </Paper>
+        </Box>
+    );
 }
 
 export default EditTask

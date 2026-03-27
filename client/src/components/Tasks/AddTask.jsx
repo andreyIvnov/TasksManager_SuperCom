@@ -2,10 +2,21 @@
 import { useEffect, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createTask } from "../../services/TasksAPI";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Button,
+  Stack,
+  Typography,
+  Box,
+  CircularProgress,
+} from '@mui/material';
 
 import LookupField from "../LookupField";
 import TagSelector from "../Tags/TagSelector";
-import "../../styles/AddTask.css"
 
 import { INITIAL_STATE, addTaskReducer } from "../../utils/localReducersManager/addTaskReducer";
 
@@ -70,109 +81,137 @@ function AddTask({ onClose, onTaskAdded }) {
     };
 
     return (
-        <div style={{ 
-            border: '2px solid #ccc', 
-            padding: '20px', 
-            margin: '10px 0',
-            backgroundColor: '#000000',
-            borderRadius: '5px'
-        }}>
-            <h3>Add New Task</h3>
+        <Dialog 
+            open={true} 
+            onClose={onClose}
+            maxWidth="sm"
+            fullWidth
+            PaperProps={{
+                sx: { borderRadius: 2 }
+            }}
+        >
+            <DialogTitle sx={{ 
+                bgcolor: 'primary.main', 
+                color: 'primary.contrastText',
+                typography: 'h5',
+                fontWeight: 600
+            }}>
+                Add New Task
+            </DialogTitle>
+            
             <form onSubmit={handleSubmit}>
-                <div style={{ textAlign: 'left', padding: '10px 0' }}>
-                    
-                    <div style={{ marginBottom: '10px' }}>
-                        <strong>Title: </strong>
-                        <input 
-                            type="text" 
-                            name="title" 
+                <DialogContent sx={{ pt: 3 }}>
+                    <Stack spacing={3}>
+                        <TextField
+                            name="title"
+                            label="Title"
                             value={state.formData.title}
                             onChange={handleInputChange}
                             required
-                            style={{ width: '300px', padding: '5px' }}
-                        />
-                    </div>
-                    
-                    <div style={{ marginBottom: '10px' }}>
-                        <strong>Description: </strong> <br />
-                        <textarea 
-                            name="description" 
-                            value={state.formData.description}
-                            onChange={handleInputChange}
-                            rows="4"
-                            placeholder="Enter task description..."
-                            style={{ 
-                                width: '300px', 
-                                padding: '5px',
-                                resize: 'vertical',
-                                fontFamily: 'inherit'
+                            fullWidth
+                            variant="outlined"
+                            sx={{
+                                '& .MuiOutlinedInput-root': {
+                                    '&:hover fieldset': {
+                                        borderColor: 'primary.main',
+                                    },
+                                },
                             }}
                         />
-                    </div>
-                    
-                    <div style={{ marginBottom: '10px' }}>
-                        <strong>Due Date: </strong>
-                        <input 
-                            type="datetime-local" 
-                            name="dueDate" 
+                        
+                        <TextField
+                            name="description"
+                            label="Description"
+                            value={state.formData.description}
+                            onChange={handleInputChange}
+                            multiline
+                            rows={4}
+                            fullWidth
+                            variant="outlined"
+                            placeholder="Enter task description..."
+                        />
+                        
+                        <TextField
+                            name="dueDate"
+                            label="Due Date"
+                            type="datetime-local"
                             value={state.formData.dueDate}
                             onChange={handleInputChange}
                             required
-                            style={{ width: '300px', padding: '5px' }}
+                            fullWidth
+                            variant="outlined"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
                         />
-                    </div>
-                    
-                    <div style={{ marginBottom: '10px' }}>
-                        <strong>Priority: </strong>
-                        <input 
-                            type="number" 
-                            min={1} 
-                            max={3} 
-                            name="priority" 
+                        
+                        <TextField
+                            name="priority"
+                            label="Priority"
+                            type="number"
+                            inputProps={{ min: 1, max: 3 }}
                             value={state.formData.priority}
                             onChange={handleInputChange}
-                            style={{ width: '300px', padding: '5px' }}
+                            fullWidth
+                            variant="outlined"
+                            helperText="Priority level: 1 (High), 2 (Medium), 3 (Low)"
                         />
-                    </div>
-                    
-                    <div style={{ marginBottom: '10px' }}>
-                        <strong>User: </strong>
-                        <LookupField 
-                            options={state.usersLookupOpts}
-                            defaultValue={state.selectedUser}
-                            onChange={handleUserChange}
-                        />
-                    </div>
-                    
-                    <div style={{ marginBottom: '15px' }}>
-                        <strong>Tags: </strong>
-                        <TagSelector 
-                            selectedTags={state.selectedTags}
-                            onTagChange={handleTagChange}
-                            readOnly={false}
-                        />
-                    </div>
-                    
-                    <div className="add-task-actions">
-                        <button 
-                            type="submit" 
-                            disabled={state.isSubmitting}
-                            className="add-task-submit-btn"
-                        >
-                            {state.isSubmitting ? 'Creating...' : 'Create Task'}
-                        </button>
-                        <button 
-                            type="button" 
-                            onClick={handleCancel}
-                            disabled={state.isSubmitting}
-                            className="add-task-cancel-btn"
-                        >
-                            Cancel
-                        </button>
-                    </div>
-                </div>
+                        
+                        <Box>
+                            <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.primary' }}>
+                                Assigned User
+                            </Typography>
+                            <LookupField 
+                                options={state.usersLookupOpts}
+                                defaultValue={state.selectedUser}
+                                onChange={handleUserChange}
+                            />
+                        </Box>
+                        
+                        <Box>
+                            <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.primary' }}>
+                                Tags
+                            </Typography>
+                            <TagSelector 
+                                selectedTags={state.selectedTags}
+                                onTagChange={handleTagChange}
+                                readOnly={false}
+                            />
+                        </Box>
+                    </Stack>
+                </DialogContent>
+
+                <DialogActions sx={{ p: 3, pt: 2, gap: 1 }}>
+                    <Button 
+                        onClick={handleCancel}
+                        disabled={state.isSubmitting}
+                        variant="outlined"
+                        color="inherit"
+                        sx={{ 
+                            textTransform: 'none',
+                            fontWeight: 500,
+                            minWidth: 100 
+                        }}
+                    >
+                        Cancel
+                    </Button>
+                    <Button 
+                        type="submit" 
+                        disabled={state.isSubmitting}
+                        variant="contained"
+                        color="primary"
+                        startIcon={state.isSubmitting ? <CircularProgress size={16} /> : null}
+                        sx={{ 
+                            textTransform: 'none',
+                            fontWeight: 500,
+                            minWidth: 120 
+                        }}
+                    >
+                        {state.isSubmitting ? 'Creating...' : 'Create Task'}
+                    </Button>
+                </DialogActions>
             </form>
-        </div>
+        </Dialog>
     );
 }
 

@@ -1,77 +1,208 @@
 import { memo, useMemo, useReducer, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
+import {
+  Box,
+  Typography,
+  Button,
+  Chip,
+  IconButton,
+  Avatar,
+  Paper,
+  Stack,
+  Tooltip
+} from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
+import {
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Add as AddIcon,
+  Person as PersonIcon
+} from '@mui/icons-material';
 
-import Task from "./Task"
 import AddTask from "./AddTask"
 import { deleteTask } from "../../services/TasksAPI"
-import "../../styles/Tasks.css"
-
 import { INITIAL_STATE, tasksReducer} from '../../utils/localReducersManager/tasksReducer';
+import '../../styles/Tasks.css';
 
 function Tasks() {
     const [state, localDispatch] = useReducer(tasksReducer, INITIAL_STATE);
-    
+    const navigate = useNavigate();
     const allTasks = useSelector((state) => state.taskReducer.tasks);
-    
-    //Sort rows "by"
-    const tasks = useMemo(() => {
-        let filteredTasks = allTasks.filter(task => task.status !== 'del');
-        
-        if (state.sortField) {
-            filteredTasks.sort((a, b) => {
-                let aValue, bValue;
-                
-                switch (state.sortField) {
-                    case 'title':
-                        aValue = a.title?.toLowerCase() || '';
-                        bValue = b.title?.toLowerCase() || '';
-                        break;
-                    case 'description':
-                        aValue = a.description?.toLowerCase() || '';
-                        bValue = b.description?.toLowerCase() || '';
-                        break;
-                    case 'user':
-                        aValue = a.user?.fullName?.toLowerCase() || '';
-                        bValue = b.user?.fullName?.toLowerCase() || '';
-                        break;
-                    case 'priority':
-                        aValue = a.priority || 0;
-                        bValue = b.priority || 0;
-                        break;
-                    case 'dueDate':
-                        aValue = new Date(a.dueDate || 0);
-                        bValue = new Date(b.dueDate || 0);
-                        break;
-                    default:
-                        return 0;
-                }
-                
-                if (aValue < bValue) return state.sortDirection === 'asc' ? -1 : 1;
-                if (aValue > bValue) return state.sortDirection === 'asc' ? 1 : -1;
-                return 0;
-            });
-        }
-        
-        return filteredTasks;
-    }, [allTasks, state.sortField, state.sortDirection]);
-
     const dispatch = useDispatch();
 
-    const handleSort = (field) => {
-        if (state.sortField === field) {
-            // Toggle direction if same field
-            localDispatch({ type: 'TOGGLE_SORT_DIRECTION', payload: state.sortDirection === 'asc' ? 'desc' : 'asc' });
-        } else {
-            // Set new field with ascending direction
-            localDispatch({ type: 'SET_SORT_FIELD', payload: field });
-            localDispatch({ type: 'TOGGLE_SORT_DIRECTION', payload: 'asc' });
-        }
-    };
+    // Transform tasks for DataGrid
+    const rows = useMemo(() => {
+        return allTasks
+            .filter(task => task.status !== 'del')
+            .map(task => ({
+                id: task.id,
+                title: task.title || '',
+                description: task.description || '',
+                dueDate: task.dueDate ? new Date(task.dueDate) : null,
+                priority: task.priority || 0,
+                user: task.user || null,
+                tags: task.tags || [],
+            }));
+    }, [allTasks]);
 
-    const getSortIcon = (field) => {
-        if (state.sortField !== field) return ' ↕️';
-        return state.sortDirection === 'asc' ? ' ↑' : ' ↓';
-    };
+    // Define columns for DataGrid
+    const columns = [
+        {
+            field: 'title',
+            headerName: 'Title',
+            flex: 1,
+            minWidth: 150,
+            renderCell: (params) => (
+                <Typography 
+                    variant="body2" 
+                    className="tasks-title-clickable"
+                    onClick={() => navigate(`/tasks/${params.row.id}`)}
+                >
+                    {params.value}
+                </Typography>
+            ),
+        },
+        {
+            field: 'description',
+            headerName: 'Description',
+            flex: 1.5,
+            minWidth: 200,
+            renderCell: (params) => (
+                <Tooltip title={params.value || ''} placement="top">
+                    <Typography variant="body2" className="tasks-description-ellipsis">
+                        {params.value}
+                    </Typography>
+                </Tooltip>
+            ),
+        },
+        {
+            field: 'dueDate',
+            headerName: 'Due Date',
+            width: 160,
+            renderCell: (params) => (
+                <Typography variant="body2">
+                    {params.value ? new Intl.DateTimeFormat('en-GB', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false
+                    }).format(params.value) : '-'}
+                </Typography>
+            ),
+            sortComparator: (v1, v2) => {
+                if (!v1 && !v2) return 0;
+                if (!v1) return -1;
+                if (!v2) return 1;
+                return v1.getTime() - v2.getTime();
+            },
+        },
+        {
+            field: 'priority',
+            headerName: 'Priority',
+            width: 100,
+            align: 'center',
+            headerAlign: 'center',
+            renderCell: (params) => (
+                <Chip 
+                    label={params.value || 0}
+                    size="small"
+                    color={params.value === 1 ? 'error' : params.value === 3 ? 'default' : 'warning'}
+                    variant="filled"
+                    className="tasks-priority-chip"
+                />
+            ),
+        },
+        {
+            field: 'user',
+            headerName: 'User',
+            width: 180,
+            renderCell: (params) => {
+                if (!params.value) {
+                    return (
+                        <Typography variant="body2" color="text.secondary">
+                            No user assigned
+                        </Typography>
+                    );
+                }
+                return (
+                    <Box className="tasks-user-container">
+                        <Avatar className="tasks-user-avatar">
+                            <PersonIcon sx={{ fontSize: 14 }} />
+                        </Avatar>
+                        <Typography variant="body2">
+                            {params.value.fullName || params.value.name || 'Unknown'}
+                        </Typography>
+                    </Box>
+                );
+            },
+            sortComparator: (v1, v2) => {
+                const name1 = v1?.fullName || v1?.name || '';
+                const name2 = v2?.fullName || v2?.name || '';
+                return name1.localeCompare(name2);
+            },
+        },
+        {
+            field: 'tags',
+            headerName: 'Tags',
+            flex: 1,
+            minWidth: 200,
+            sortable: false,
+            renderCell: (params) => (
+                <Box className="tasks-tags-container">
+                    {params.value && params.value.length > 0 ? (
+                        params.value.slice(0, 3).map((tag, index) => (
+                            <Chip
+                                key={tag.id || index}
+                                label={tag.name || tag}
+                                size="small"
+                                variant="outlined"
+                                className="tasks-tag-chip"
+                            />
+                        ))
+                    ) : (
+                        <Typography variant="body2" color="text.secondary">
+                            No tags
+                        </Typography>
+                    )}
+                    {params.value && params.value.length > 3 && (
+                        <Typography variant="caption" color="text.secondary">
+                            +{params.value.length - 3} more
+                        </Typography>
+                    )}
+                </Box>
+            ),
+        },
+        {
+            field: 'actions',
+            headerName: '',
+            width: 120,
+            sortable: false,
+            disableColumnMenu: true,
+            renderCell: (params) => (
+                <Stack direction="row" spacing={0.5} className="tasks-actions-container">
+                    <IconButton
+                        size="small"
+                        color="primary"
+                        onClick={() => navigate(`/tasks/${params.row.id}`)}
+                        className="tasks-edit-button"
+                    >
+                        <EditIcon fontSize="small" />
+                    </IconButton>
+                    <IconButton
+                        size="small"
+                        color="error"
+                        onClick={() => removeTask(params.row.id)}
+                        className="tasks-delete-button"
+                    >
+                        <DeleteIcon fontSize="small" />
+                    </IconButton>
+                </Stack>
+            ),
+        },
+    ];
 
     const removeTask = async (id) => {
         try {
@@ -95,76 +226,56 @@ function Tasks() {
     };
 
     return (
-        <div className="tasks-container">
-            <div className="tasks-header">
-                <h1 className="tasks-title">Tasks</h1>
-            </div>
-            <div className="tasks-table-container">
-                <table className="tasks-table">
-                    <thead>
-                        <tr>
-                            <th 
-                                onClick={() => handleSort('title')}
-                                style={{ cursor: 'pointer', userSelect: 'none' }}
-                            >
-                                Title{getSortIcon('title')}
-                            </th>
-                            <th 
-                                onClick={() => handleSort('description')}
-                                style={{ cursor: 'pointer', userSelect: 'none' }}
-                            >
-                                Description{getSortIcon('description')}
-                            </th>
-                            <th 
-                                onClick={() => handleSort('dueDate')}
-                                style={{ cursor: 'pointer', userSelect: 'none' }}
-                            >
-                                Due Date{getSortIcon('dueDate')}
-                            </th>
-                            <th 
-                                onClick={() => handleSort('priority')}
-                                style={{ cursor: 'pointer', userSelect: 'none' }}
-                            >
-                                Priority{getSortIcon('priority')}
-                            </th>
-                            <th 
-                                onClick={() => handleSort('user')}
-                                style={{ cursor: 'pointer', userSelect: 'none' }}
-                            >
-                                User{getSortIcon('user')}
-                            </th>
-                            <th>Tags</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {tasks.map((task) => {
-                            return (
-                                <tr key={task.id}><Task taskInfo={task} onRemove={removeTask}/></tr>
-                            )
-                        })}
-                    </tbody>
-                </table>
-                
-                <div className="tasks-actions">
-                    <button 
-                        className="tasks-new-btn"
-                        onClick={handleNewTask}
-                        disabled={state.showAddTask}
-                    >
-                        + New Task
-                    </button>
-                </div>
+        <Box className="tasks-container">
+            {/* Header */}
+            <Box className="tasks-header">
+                <Typography variant="h4" component="h1" className="tasks-title">
+                    Tasks
+                </Typography>
+                <Button
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    onClick={handleNewTask}
+                    disabled={state.showAddTask}
+                    className="tasks-new-button"
+                >
+                    New Task
+                </Button>
+            </Box>
 
-                {state.showAddTask && (
-                    <AddTask 
-                        onClose={handleAddTaskClose}
-                        onTaskAdded={handleTaskAdded}
-                    />
-                )}  
-            </div>
-        </div>
+            {/* DataGrid */}
+            <Box className="tasks-data-grid-container">
+                <DataGrid
+                    rows={rows}
+                    columns={columns}
+                    pageSizeOptions={[8, 16, 25]}
+                    pagination
+                    disableRowSelectionOnClick
+                    disableColumnFilter
+                    disableColumnSelector
+                    disableDensitySelector
+                    disableVirtualization={false}
+                    autoHeight={false}
+                    className="tasks-data-grid"
+                    initialState={{
+                        pagination: {
+                            paginationModel: { pageSize: 8, page: 0 },
+                        },
+                        sorting: {
+                            sortModel: [{ field: 'priority', sort: 'desc' }],
+                        },
+                    }}
+                />
+            </Box>
+
+            {/* Add Task Modal */}
+            {state.showAddTask && (
+                <AddTask 
+                    onClose={handleAddTaskClose}
+                    onTaskAdded={handleTaskAdded}
+                />
+            )}
+        </Box>
     )
 }
 

@@ -1,94 +1,89 @@
-import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
-import "../styles/LookupField.css";
+import { useEffect, useState } from "react";
+import { 
+  Autocomplete, 
+  TextField, 
+  Box, 
+  Typography,
+  Avatar 
+} from '@mui/material';
+import { Person as PersonIcon } from '@mui/icons-material';
 
-function LookupField({ options, defaultValue, onChange, entityName = "record"}) {
-    const [isOpen, setIsOpen] = useState(false);
-    const [search, setSearch] = useState("");
-    // Initialize selected from defaultValue and allow null when cleared
-    const [selected, setSelected] = useState(defaultValue || null);
-
-    const wrapperRef = useRef(null);
-
-    const handleClickOutside = (e) => {
-        if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
-            setIsOpen(false);
-        }
-    };
+function LookupField({ options, defaultValue, onChange, entityName = "user" }) {
+    const [value, setValue] = useState(defaultValue || null);
 
     useEffect(() => {
-        // add listener on mount, remove on unmount
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
-
-    // Update selected when defaultValue prop changes
-    useEffect(() => {
-        if (defaultValue) {
-            setSelected(defaultValue);
-            onChange(defaultValue); 
-            setSearch("");
-            setIsOpen(false);
-        }
+        setValue(defaultValue || null);
     }, [defaultValue]);
 
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+        onChange(newValue);
+    };
+
     const safeOptions = options || [];
-    const filteredOptions = safeOptions.filter(o =>
-        o.label.toLowerCase().includes(search.toLowerCase())
-    );
-
-    const selectItem = (value) => {
-        setSelected(value);
-        setSearch("");
-        setIsOpen(false);
-        onChange(value);
-    };
-
-    const clearValue = () => {
-        setSelected(null);
-        setSearch("");
-    };
 
     return (
-        <div className="crm-lookup" ref={wrapperRef}>
-            {selected ? (
-                <div className="crm-selected">
-                    <Link to={`/${entityName}/${selected.id}`}>
-                        {selected.label}
-                    </Link>
-                    <span className="crm-clear" onClick={clearValue}>×</span>
-                </div>
-            ) : (
-                <input
-                    className="crm-input"
+        <Autocomplete
+            value={value}
+            onChange={handleChange}
+            options={safeOptions}
+            getOptionLabel={(option) => option?.label || ''}
+            isOptionEqualToValue={(option, value) => option.id === value.id}
+            renderInput={(params) => (
+                <TextField
+                    {...params}
                     placeholder={`Search ${entityName}...`}
-                    value={search}
-                    onChange={(e) => {
-                        setSearch(e.target.value);
-                        setIsOpen(true);
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    InputProps={{
+                        ...params.InputProps,
+                        sx: {
+                            '& .MuiOutlinedInput-notchedOutline': {
+                                borderColor: 'grey.300',
+                            },
+                            '&:hover .MuiOutlinedInput-notchedOutline': {
+                                borderColor: 'primary.main',
+                            },
+                        }
                     }}
-                    onFocus={() => setIsOpen(true)}
                 />
             )}
-
-            {/* Dropdown */}
-            {isOpen && !selected && (
-                <div className="crm-dropdown">
-                    {filteredOptions.length === 0 && (
-                        <div className="crm-empty">No results</div>
-                    )}
-                    {filteredOptions.map(item => (
-                        <div
-                            key={item.id}
-                            className="crm-option"
-                            onClick={() => selectItem(item)}
-                        >
-                            {item.label}
-                        </div>
-                    ))}
-                </div>
-            )}
-        </div>
+            renderOption={(props, option) => {
+                const { key, ...optionProps } = props;
+                return (
+                    <Box 
+                        key={key}
+                        component="li" 
+                        {...optionProps}
+                        sx={{ 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            gap: 1.5,
+                            p: 1
+                        }}
+                    >
+                        <Avatar sx={{ width: 24, height: 24, bgcolor: 'primary.main' }}>
+                            <PersonIcon sx={{ fontSize: 14 }} />
+                        </Avatar>
+                        <Typography variant="body2">
+                            {option.label}
+                        </Typography>
+                    </Box>
+                );
+            }}
+            noOptionsText="No users found"
+            clearOnBlur={false}
+            selectOnFocus
+            sx={{
+                '& .MuiAutocomplete-clearIndicator': {
+                    color: 'grey.500',
+                },
+                '& .MuiAutocomplete-popupIndicator': {
+                    color: 'grey.500',
+                },
+            }}
+        />
     );
 }
 

@@ -1,5 +1,12 @@
 import { useState } from "react"
-import "../../styles/AddTag.css"
+import {
+  Paper,
+  Typography,
+  TextField,
+  Button,
+  Stack,
+} from '@mui/material';
+import { Add as AddIcon } from '@mui/icons-material';
 
 function AddTag({ onSave }) {
     const [newTagName, setNewTagName] = useState("")
@@ -12,26 +19,37 @@ function AddTag({ onSave }) {
     }
 
     return (
-        <div className="add-tag-container">
-            <h2 className="add-tag-title">Add New Tag</h2>
-            <div className="add-tag-field">
-                <label className="add-tag-label">Name:</label>
-                <input
-                    type="text"
-                    name="name"
-                    maxLength={25}
+        <Paper sx={{ p: 3, bgcolor: 'primary.50' }}>
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                Add New Tag
+            </Typography>
+            
+            <Stack direction="row" spacing={2} alignItems="flex-start">
+                <TextField
+                    label="Tag Name"
                     value={newTagName}
-                    className="add-tag-input"
                     onChange={(e) => setNewTagName(e.target.value)}
+                    size="small"
+                    fullWidth
+                    inputProps={{ maxLength: 25 }}
+                    helperText={`${newTagName.length}/25 characters`}
+                    variant="outlined"
                 />
-            </div>
-            <button
-                className="add-tag-save-btn"
-                onClick={handleSave}
-            >
-                Create
-            </button>
-        </div>
+                <Button
+                    variant="contained"
+                    onClick={handleSave}
+                    disabled={!newTagName.trim()}
+                    startIcon={<AddIcon />}
+                    sx={{
+                        textTransform: 'none',
+                        fontWeight: 500,
+                        minWidth: 100
+                    }}
+                >
+                    Create
+                </Button>
+            </Stack>
+        </Paper>
     )
 }
 

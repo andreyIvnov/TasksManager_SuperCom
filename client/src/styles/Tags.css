@@ -1,23 +1,77 @@
-/* Tags Component - Black Pink Blue Theme */
-
+/* Tags Component Styles */
 .tags-container {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm);
-    background: var(--surface-elevated);
-    padding: var(--spacing-sm);
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border-primary);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
 }
 
-.tags-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--spacing-sm);
-    max-width: 100%;
+.tags-title {
+  margin-bottom: 24px;
+  font-weight: 600;
+}
+
+.tags-list-container {
+  flex-grow: 1;
+  width: 100%;
+}
+
+.tags-list-paper {
+  padding: 24px;
+  flex-grow: 1;
+  width: 100%;
+}
+
+.tags-list-title {
+  margin-bottom: 16px;
+}
+
+.tags-empty-message {
+  color: #757575;
+}
+
+/* Individual Tag Card Styles */
+.tag-card {
+  height: 100%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tag-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.tag-card-content {
+  padding-bottom: 8px;
+}
+
+.tag-card-stack {
+  gap: 8px;
+  align-items: center;
+}
+
+.tag-icon {
+  font-size: 32px;
+}
+
+.tag-name {
+  font-weight: 500;
+  text-align: center;
+}
+
+.tag-id-chip {
+  font-size: 0.75rem;
+}
+
+.tag-actions {
+  padding-top: 0;
+  justify-content: center;
+}
+
+.tag-delete-button {
+  background-color: #FFEBEE;
 }
 
 /* Responsive grid for different screen sizes */

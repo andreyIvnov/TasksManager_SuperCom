@@ -1,10 +1,17 @@
 import { createTag, deleteTag } from '../../services/TagsApi'
 import { useDispatch, useSelector } from 'react-redux'
+import {
+  Box,
+  Typography,
+  Paper,
+  Stack,
+  Grid
+} from '@mui/material';
 
 import Tag from './Tag'
 import AddTag from './AddTag'
-import '../../styles/Tags.css'
 import { HttpStatusCode } from 'axios'
+import '../../styles/Tags.css';
 
 function Tags() {
     const dispatch = useDispatch();
@@ -29,18 +36,35 @@ function Tags() {
     }
 
     return (
-        <>
-            <div className="tags-container">
-                <div className="tags-list">
-                    {storedTags.map((tag) => (
-                        <Tag key={tag.id} tagInfo={tag} onDelete={removeTag}/>
-                    ))}
-                </div>
-            </div>
-            <div className="add-tag-wrapper">
-                <AddTag onSave={addNewTag}/>
-            </div>
-        </>
+        <Box className="tags-container">
+            <Typography variant="h4" component="h1" className="tags-title">
+                Tags
+            </Typography>
+            
+            <Stack spacing={3} className="tags-list-container">
+                <AddTag onSave={addNewTag} />
+                
+                <Paper sx={{ p: 3, flexGrow: 1 }} className="tags-list-paper">
+                    <Typography variant="h6" className="tags-list-title">
+                        Tag List ({storedTags.length})
+                    </Typography>
+                    
+                    {storedTags.length === 0 ? (
+                        <Typography variant="body2" className="tags-empty-message">
+                            No tags created yet. Use the form above to create your first tag.
+                        </Typography>
+                    ) : (
+                        <Grid container spacing={2}>
+                            {storedTags.map((tag) => (
+                                <Grid xs={12} sm={6} md={4} lg={3} key={tag.id}>
+                                    <Tag tagInfo={tag} onDelete={removeTag} />
+                                </Grid>
+                            ))}
+                        </Grid>
+                    )}
+                </Paper>
+            </Stack>
+        </Box>
     )
 }
 

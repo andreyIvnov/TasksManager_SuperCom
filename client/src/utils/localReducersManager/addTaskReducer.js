@@ -7,7 +7,7 @@ const INITIAL_STATE = {
         title: '',
         description: '',
         dueDate: new Date().toISOString().slice(0,16), 
-        priority: 3,
+        priority: 1,
         userId: null,
         isReminderSent: false
     }

@@ -1,54 +1,120 @@
-/* Tasks Component - Black Pink Blue Theme */
+/* Tasks Component Styles - Material UI Compatible */
 
 .tasks-container {
-    background: var(--surface-card);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-xl);
-    box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
-    margin: var(--spacing-lg) 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .tasks-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-lg);
-    padding-bottom: var(--spacing-md);
-    border-bottom: 1px solid rgba(224, 224, 224, 1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
 }
 
 .tasks-title {
-    background: linear-gradient(45deg, var(--primary-400), var(--secondary-400));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin: 0;
-    font-size: var(--font-size-2xl);
-    font-weight: var(--font-weight-bold);
+  font-weight: 600;
+  color: #212121;
+  margin: 0;
+  font-size: 2.125rem;
 }
 
-.tasks-table {
-    width: 100%;
-    background: var(--surface-card);
-    border-radius: var(--radius-sm);
-    border-collapse: separate;
-    border-spacing: 0;
-    overflow: hidden;
-    box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
-    margin-bottom: var(--spacing-lg);
-    border: 1px solid rgba(224, 224, 224, 0.6);
+.tasks-new-button {
+  text-transform: none;
+  font-weight: 500;
+  padding: 8px 24px;
 }
 
-.tasks-table th {
-    background: linear-gradient(135deg, var(--primary-700), var(--secondary-700));
-    color: var(--text-primary);
-    padding: var(--spacing-md);
-    font-weight: var(--font-weight-semibold);
-    text-align: center;
-    border-bottom: 1px solid rgba(224, 224, 224, 1);
-    font-size: var(--font-size-sm);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+.tasks-data-grid-container {
+  flex-grow: 1;
+  min-height: 0;
+}
+
+.tasks-data-grid {
+  height: 100%;
+  border: none;
+  background-color: #FAFAFA;
+}
+
+.tasks-data-grid .MuiDataGrid-columnHeaders {
+  background-color: #F5F5F5;
+  border-bottom: 2px solid #E0E0E0;
+}
+
+.tasks-data-grid .MuiDataGrid-cell {
+  border-bottom: 1px solid #EEEEEE;
+  display: flex;
+  align-items: center;
+}
+
+.tasks-data-grid .MuiDataGrid-row:hover {
+  background-color: #FAFAFA;
+}
+
+.tasks-data-grid .MuiDataGrid-footerContainer {
+  border-top: 2px solid #E0E0E0;
+  background-color: #FAFAFA;
+}
+
+.tasks-title-clickable {
+  font-weight: 500;
+  color: #FF9800;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.tasks-description-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tasks-priority-chip {
+  height: 20px;
+  font-size: 0.75rem;
+}
+
+.tasks-user-avatar {
+  width: 24px;
+  height: 24px;
+  background-color: #FF9800;
+}
+
+.tasks-user-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tasks-tags-container {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.tasks-tag-chip {
+  height: 20px;
+  font-size: 0.75rem;
+  background-color: #64B5F6;
+  color: #FFFFFF;
+  border-color: #2196F3;
+}
+
+.tasks-actions-container {
+  display: flex;
+  gap: 4px;
+}
+
+.tasks-edit-button {
+  background-color: #FFF3E0;
+}
+
+.tasks-delete-button {
+  background-color: #FFEBEE;
+  letter-spacing: 0.5px;
 }
 
 .tasks-table th:first-child {

@@ -1,7 +1,23 @@
 import { useState, useMemo, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { createTag } from "../../services/TagsApi"
-import '../../styles/TagSelector.css'
+import {
+  Box,
+  Chip,
+  TextField,
+  Button,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Stack,
+  Typography,
+  CircularProgress,
+} from '@mui/material';
+import {
+  Add as AddIcon,
+  Close as CloseIcon
+} from '@mui/icons-material';
 
 function TagSelector({ selectedTags = [], onTagChange, taskId, readOnly = false }) {
     const allTagsFromStore = useSelector((state) => state.tagReducer.tags);
@@ -84,66 +100,98 @@ function TagSelector({ selectedTags = [], onTagChange, taskId, readOnly = false 
     };
 
     return (
-        <div className="tag-selector-container">
-            <div className="selected-tags">
-                {selectedTagIds.map(tagId => {
-                    const tag = allTags.find(t => t.id === tagId);
-                    return tag ? (
-                        <span key={tagId} className="tag-chip">
-                            {tag.name}
-                            {!readOnly && (
-                                <button 
-                                    type="button"
-                                    onClick={() => handleTagRemove(tagId)}
-                                    className="tag-remove-btn"
-                                >
-                                    ×
-                                </button>
-                            )}
-                        </span>
-                    ) : null;
-                })}
-            </div>
+        <Box sx={{ minWidth: 0 }}>
+            {/* Selected Tags */}
+            <Box sx={{ 
+                display: 'flex', 
+                flexWrap: 'wrap', 
+                gap: 0.5, 
+                mb: readOnly ? 0 : 2 
+            }}>
+                {selectedTagIds.length === 0 ? (
+                    <Typography variant="body2" color="text.secondary">
+                        {readOnly ? 'No tags' : 'No tags selected'}
+                    </Typography>
+                ) : (
+                    selectedTagIds.map(tagId => {
+                        const tag = allTags.find(t => t.id === tagId);
+                        return tag ? (
+                            <Chip
+                                key={tagId}
+                                label={tag.name}
+                                size="small"
+                                onDelete={readOnly ? undefined : () => handleTagRemove(tagId)}
+                                deleteIcon={<CloseIcon />}
+                                sx={{
+                                    backgroundColor: 'secondary.light',
+                                    color: 'secondary.contrastText',
+                                    '& .MuiChip-deleteIcon': {
+                                        color: 'secondary.main',
+                                        '&:hover': {
+                                            color: 'secondary.dark',
+                                        },
+                                    },
+                                }}
+                            />
+                        ) : null;
+                    })
+                )}
+            </Box>
             
-            {/* Dropdown to add existing tags */}
-            {!readOnly && availableTags.length > 0 && (
-                <select 
-                    onChange={(e) => handleTagAdd(e.target.value)}
-                    value=""
-                    className="tag-dropdown"
-                >
-                    <option value="">Add existing tag...</option>
-                    {availableTags.map(tag => (
-                        <option key={tag.id} value={tag.id}>
-                            {tag.name}
-                        </option>
-                    ))}
-                </select>
-            )}
-            
-            {/* Create new tag */}
             {!readOnly && (
-                <div className="tag-create-container">
-                    <input 
-                        type="text" 
-                        value={newTagName}
-                        onChange={(e) => setNewTagName(e.target.value)}
-                        onKeyPress={handleCreateTagKeyPress}
-                        placeholder="Create new tag..."
-                        disabled={isCreatingTag}
-                        className="tag-create-input"
-                    />
-                    <button 
-                        type="button"
-                        onClick={handleCreateTag}
-                        disabled={!newTagName.trim() || isCreatingTag}
-                        className="tag-create-btn"
-                    >
-                        {isCreatingTag ? 'Creating...' : 'Create'}
-                    </button>
-                </div>
+                <Stack spacing={2}>
+                    {/* Dropdown to add existing tags */}
+                    {availableTags.length > 0 && (
+                        <FormControl size="small" fullWidth>
+                            <InputLabel>Add existing tag</InputLabel>
+                            <Select
+                                label="Add existing tag"
+                                value=""
+                                onChange={(e) => handleTagAdd(e.target.value)}
+                            >
+                                {availableTags.map(tag => (
+                                    <MenuItem key={tag.id} value={tag.id}>
+                                        {tag.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    )}
+                    
+                    {/* Create new tag */}
+                    <Box sx={{ 
+                        display: 'flex', 
+                        gap: 1, 
+                        alignItems: 'flex-start' 
+                    }}>
+                        <TextField
+                            size="small"
+                            value={newTagName}
+                            onChange={(e) => setNewTagName(e.target.value)}
+                            onKeyPress={handleCreateTagKeyPress}
+                            placeholder="Create new tag..."
+                            disabled={isCreatingTag}
+                            fullWidth
+                            variant="outlined"
+                        />
+                        <Button
+                            variant="outlined"
+                            onClick={handleCreateTag}
+                            disabled={!newTagName.trim() || isCreatingTag}
+                            startIcon={isCreatingTag ? <CircularProgress size={16} /> : <AddIcon />}
+                            size="small"
+                            sx={{ 
+                                textTransform: 'none',
+                                minWidth: 'auto',
+                                px: 2 
+                            }}
+                        >
+                            {isCreatingTag ? 'Creating' : 'Create'}
+                        </Button>
+                    </Box>
+                </Stack>
             )}
-        </div>
+        </Box>
     );
 }
 

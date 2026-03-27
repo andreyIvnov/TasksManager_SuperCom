@@ -1,10 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import { Box } from '@mui/material';
 
-import './styles/theme.css'
-import './styles/global.css'
-import './App.css'
+import theme from './theme/theme';
 import loadAllData from './utils/loadAllData';
 import Home from './pages/Home'
 import Tasks from './components/Tasks/Tasks';
@@ -24,8 +25,9 @@ function App() {
   
 
   return (
-    <>
-      <div className="app-container">
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box sx={{ minHeight: '100vh', backgroundColor: 'background.default' }}>
         <Routes>
           <Route path='/' element={<Home />}>
             <Route path='tasks' element={<Tasks />} />
@@ -34,8 +36,8 @@ function App() {
             <Route path='users' element={<Users />} />
           </Route>
         </Routes>
-      </div>
-    </>
+      </Box>
+    </ThemeProvider>
   )
 }
 

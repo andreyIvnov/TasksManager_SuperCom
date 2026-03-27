@@ -1,7 +1,17 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { createUser } from "../../services/UsersAPI";
-import "../../styles/AddUser.css"
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Button,
+  Stack,
+  CircularProgress
+} from '@mui/material';
+import { Person as PersonIcon } from '@mui/icons-material';
 
 function AddUser({ onClose, onUserAdded }) {
     const [formData, setFormData] = useState({
@@ -49,69 +59,100 @@ function AddUser({ onClose, onUserAdded }) {
     };
 
     return (
-        <div className="add-user-container">
-            <h3>Add New User</h3>
+        <Dialog 
+            open={true} 
+            onClose={onClose}
+            maxWidth="sm"
+            fullWidth
+            PaperProps={{
+                sx: { borderRadius: 2 }
+            }}
+        >
+            <DialogTitle sx={{ 
+                bgcolor: 'primary.main', 
+                color: 'primary.contrastText',
+                typography: 'h5',
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1
+            }}>
+                <PersonIcon />
+                Add New User
+            </DialogTitle>
+            
             <form onSubmit={handleSubmit}>
-                <div className="form-content">
-                    <div className="form-field">
-                        <strong>Full Name: </strong>
-                        <input 
-                            type="text" 
-                            name="fullName" 
+                <DialogContent sx={{ pt: 3 }}>
+                    <Stack spacing={3}>
+                        <TextField
+                            name="fullName"
+                            label="Full Name"
                             value={formData.fullName}
                             onChange={handleInputChange}
                             required
-                            className="form-input"
+                            fullWidth
+                            variant="outlined"
                             placeholder="Enter full name"
+                            autoFocus
                         />
-                    </div>
-                    
-                    <div className="form-field">
-                        <strong>Email: </strong>
-                        <input 
-                            type="email" 
-                            name="email" 
+                        
+                        <TextField
+                            name="email"
+                            label="Email Address"
+                            type="email"
                             value={formData.email}
                             onChange={handleInputChange}
                             required
-                            className="form-input"
+                            fullWidth
+                            variant="outlined"
                             placeholder="Enter email address"
                         />
-                    </div>
-                    
-                    <div className="form-field">
-                        <strong>Telephone: </strong>
-                        <input 
-                            type="tel" 
-                            name="telephone" 
+                        
+                        <TextField
+                            name="telephone"
+                            label="Telephone"
+                            type="tel"
                             value={formData.telephone}
                             onChange={handleInputChange}
                             required
-                            className="form-input"
+                            fullWidth
+                            variant="outlined"
                             placeholder="Enter phone number"
                         />
-                    </div>
-                </div>
-                
-                <div className="form-actions">
-                    <button 
-                        type="submit" 
-                        className="btn-primary"
-                        disabled={isSubmitting}
-                    >
-                        {isSubmitting ? 'Adding...' : 'Add User'}
-                    </button>
-                    <button 
-                        type="button" 
-                        className="btn-secondary"
+                    </Stack>
+                </DialogContent>
+
+                <DialogActions sx={{ p: 3, pt: 2, gap: 1 }}>
+                    <Button 
                         onClick={handleCancel}
                         disabled={isSubmitting}
+                        variant="outlined"
+                        color="inherit"
+                        sx={{ 
+                            textTransform: 'none',
+                            fontWeight: 500,
+                            minWidth: 100 
+                        }}
                     >
                         Cancel
-                    </button>
-                </div>
+                    </Button>
+                    <Button 
+                        type="submit" 
+                        disabled={isSubmitting}
+                        variant="contained"
+                        color="primary"
+                        startIcon={isSubmitting ? <CircularProgress size={16} /> : <PersonIcon />}
+                        sx={{ 
+                            textTransform: 'none',
+                            fontWeight: 500,
+                            minWidth: 120 
+                        }}
+                    >
+                        {isSubmitting ? 'Adding...' : 'Add User'}
+                    </Button>
+                </DialogActions>
             </form>
-        </div>
+        </Dialog>
     );
 }
 

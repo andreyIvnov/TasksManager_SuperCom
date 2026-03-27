@@ -1,5 +1,16 @@
 
-import "../../styles/User.css"
+import { 
+  Box, 
+  Typography, 
+  IconButton, 
+  Avatar, 
+  Stack,
+  TableCell 
+} from '@mui/material';
+import { 
+  Delete as DeleteIcon, 
+  Person as PersonIcon 
+} from '@mui/icons-material';
 
 function User({ userInfo, onRemove, inline = false }) {
     const handleRemove = () => {
@@ -10,30 +21,60 @@ function User({ userInfo, onRemove, inline = false }) {
 
     if (inline) {
         return (
-            <div className="user-inline">
-                <div className="user-inline-name">{userInfo.fullName}</div>
-                <div className="user-inline-phone">{userInfo.telephone}</div>
-                <div className="user-inline-email">{userInfo.email}</div>
-            </div>
+            <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: 1 
+            }}>
+                <Avatar sx={{ width: 24, height: 24, bgcolor: 'primary.main' }}>
+                    <PersonIcon sx={{ fontSize: 14 }} />
+                </Avatar>
+                <Stack spacing={0}>
+                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                        {userInfo.fullName}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                        {userInfo.email}
+                    </Typography>
+                </Stack>
+            </Box>
         );
     }
 
     return (
         <>
-            <td className="user-cell user-name">{userInfo.fullName}</td>
-            <td className="user-cell user-email">{userInfo.email}</td>
-            <td className="user-cell user-phone">{userInfo.telephone}</td>
-            <td className="user-cell user-actions">
+            <TableCell>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main' }}>
+                        <PersonIcon sx={{ fontSize: 18 }} />
+                    </Avatar>
+                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                        {userInfo.fullName}
+                    </Typography>
+                </Box>
+            </TableCell>
+            <TableCell>
+                <Typography variant="body2">
+                    {userInfo.email}
+                </Typography>
+            </TableCell>
+            <TableCell>
+                <Typography variant="body2">
+                    {userInfo.telephone}
+                </Typography>
+            </TableCell>
+            <TableCell>
                 {onRemove && (
-                    <button 
-                        className="btn-danger user-delete-btn" 
+                    <IconButton 
                         onClick={handleRemove}
-                        title="Delete User"
+                        color="error"
+                        size="small"
+                        sx={{ bgcolor: 'error.50' }}
                     >
-                        🗑️
-                    </button>
+                        <DeleteIcon fontSize="small" />
+                    </IconButton>
                 )}
-            </td>
+            </TableCell>
         </>
     )
 }

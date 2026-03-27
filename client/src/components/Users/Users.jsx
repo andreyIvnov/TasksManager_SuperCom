@@ -1,10 +1,23 @@
 import { memo, useMemo, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import {
+  Box,
+  Typography,
+  Button,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  TableContainer,
+  Paper,
+  Stack
+} from '@mui/material';
+import { Add as AddIcon } from '@mui/icons-material';
 
 import User from "./User"
 import AddUser from "./AddUser"
 import { deleteUser } from "../../services/UsersAPI"
-import "../../styles/Users.css"
 
 function Users() {  
     const [showAddUser, setShowAddUser] = useState(false);
@@ -39,49 +52,91 @@ function Users() {
     };
 
     return (
-        <div className="users-container">
-            <div className="users-header">
-                <h1 className="users-title">Users</h1>
-            </div>
-            <div className="users-table-container">
-                <table className="users-table">
-                    <thead>
-                        <tr>
-                            <th>Full Name</th>
-                            <th>Email</th>
-                            <th>Telephone</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {users.map((user) => {
-                            return (
-                                <tr key={user.id}>
-                                    <User userInfo={user} onRemove={removeUser}/>
-                                </tr>
-                            )
-                        })}
-                    </tbody>
-                </table>
-                
-                <div className="users-actions">
-                    <button 
-                        className="users-new-btn"
-                        onClick={handleNewUser}
-                        disabled={showAddUser}
-                    >
-                        + New User
-                    </button>
-                </div>
+        <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            {/* Header */}
+            <Box sx={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center',
+                mb: 3
+            }}>
+                <Typography variant="h4" component="h1" sx={{ 
+                    fontWeight: 600,
+                    color: 'text.primary'
+                }}>
+                    Users
+                </Typography>
+                <Button
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    onClick={handleNewUser}
+                    disabled={showAddUser}
+                    sx={{ 
+                        textTransform: 'none',
+                        fontWeight: 500,
+                        px: 3
+                    }}
+                >
+                    New User
+                </Button>
+            </Box>
 
-                {showAddUser && (
-                    <AddUser 
-                        onClose={handleAddUserClose}
-                        onUserAdded={handleUserAdded}
-                    />
-                )}  
-            </div>
-        </div>
+            {/* Users Table */}
+            <Paper sx={{ flexGrow: 1, overflow: 'hidden' }}>
+                <TableContainer sx={{ height: '100%' }}>
+                    <Table stickyHeader>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell sx={{ fontWeight: 600, bgcolor: 'grey.100' }}>
+                                    Full Name
+                                </TableCell>
+                                <TableCell sx={{ fontWeight: 600, bgcolor: 'grey.100' }}>
+                                    Email
+                                </TableCell>
+                                <TableCell sx={{ fontWeight: 600, bgcolor: 'grey.100' }}>
+                                    Telephone
+                                </TableCell>
+                                <TableCell sx={{ fontWeight: 600, bgcolor: 'grey.100', width: 100 }}>
+                                    Actions
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {users.length === 0 ? (
+                                <TableRow>
+                                    <TableCell colSpan={4} sx={{ textAlign: 'center', py: 4 }}>
+                                        <Typography variant="body2" color="text.secondary">
+                                            No users found. Click "New User" to add one.
+                                        </Typography>
+                                    </TableCell>
+                                </TableRow>
+                            ) : (
+                                users.map((user) => (
+                                    <TableRow 
+                                        key={user.id}
+                                        sx={{
+                                            '&:hover': {
+                                                backgroundColor: 'grey.50',
+                                            },
+                                        }}
+                                    >
+                                        <User userInfo={user} onRemove={removeUser} />
+                                    </TableRow>
+                                ))
+                            )}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Paper>
+
+            {/* Add User Modal */}
+            {showAddUser && (
+                <AddUser 
+                    onClose={handleAddUserClose}
+                    onUserAdded={handleUserAdded}
+                />
+            )}
+        </Box>
     )
 }
 
