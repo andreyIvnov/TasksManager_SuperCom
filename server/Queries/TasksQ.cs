@@ -71,5 +71,38 @@ namespace server.Queries
                 throw new Exception("Exception into TasksQ.GetAllTasks(): " + ex.Message, ex);
             }
         }
+
+        // RabbitMQ methods for task reminders
+        public static async Task<List<TaskItem>> GetOverdueTasksForRemindersAsync(AppDbContext context)
+        {
+            try
+            {
+                return await context.Tasks
+                    .Where(t => t.DueDate < DateTime.Now && 
+                               (t.IsReminderSent == false || t.IsReminderSent == null))
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Exception in TasksQ.GetOverdueTasksForRemindersAsync(): " + ex.Message, ex);
+            }
+        }
+
+        public static async Task<bool> MarkReminderSentAsync(AppDbContext context, int taskId)
+        {
+            try
+            {
+                var affectedRows = await context.Tasks
+                    .Where(t => t.Id == taskId && (t.IsReminderSent == false || t.IsReminderSent == null))
+                    .ExecuteUpdateAsync(setters => setters
+                        .SetProperty(t => t.IsReminderSent, true));
+
+                return affectedRows > 0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Exception in TasksQ.MarkReminderSentAsync(): " + ex.Message, ex);
+            }
+        }
     }
 }
